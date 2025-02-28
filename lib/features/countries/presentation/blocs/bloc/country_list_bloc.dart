@@ -19,7 +19,7 @@ class CountryListBloc extends Bloc<CountryListEvent, CountryListState> {
       
       // Check network connectivity
       var connectivityResult = await connectivity.checkConnectivity();
-      if (connectivityResult == ConnectivityResult.none) {
+      if (connectivityResult.contains(ConnectivityResult.none)) {
         emit(CountryListError(message: 'No Internet connection. Please check your network settings.'));
         return;
       }

@@ -44,7 +44,7 @@ class CountryApi {
 
   Future<List<Country>> fetchCountryDetails(String name) async {
     var connectivityResult = await connectivity.checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       throw SocketException('No Internet connection. Please check your network settings.');
     }
 

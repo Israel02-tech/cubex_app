@@ -37,7 +37,7 @@ flutter run
 ```
 └─ lib
    ├─ core
-   │  ├─ constraints.dart
+   │  ├─ constants.dart
    │  └─ routes.dart
    ├─ features
    │  └─ countries
