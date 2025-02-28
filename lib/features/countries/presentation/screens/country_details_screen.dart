@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:connectivity_plus/connectivity_plus.dart'; // For connectivity check
 
 import '../../data/models/country_model.dart';
 import '../../data/repositories/country_repository.dart';
@@ -13,11 +14,15 @@ class CountryDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final countryRepository =
-        CountryRepository(api: CountryApi(client: http.Client()));
+    final countryRepository = CountryRepository(
+      api: CountryApi(client: http.Client(), connectivity: Connectivity()),
+    );
+
     return BlocProvider(
-      create: (context) => CountryDetailsBloc(repository: countryRepository)
-        ..add(FetchCountryDetails(countryName: countryName)),
+      create: (context) => CountryDetailsBloc(
+        repository: countryRepository,
+        connectivity: Connectivity(),
+      )..add(FetchCountryDetails(countryName: countryName)),
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -36,7 +41,8 @@ class CountryDetailsScreen extends StatelessWidget {
               return Center(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 16),
                     child: Card(
                       elevation: 4,
                       shape: RoundedRectangleBorder(
@@ -111,7 +117,29 @@ class CountryDetailsScreen extends StatelessWidget {
                 ),
               );
             } else if (state is CountryDetailsError) {
-              return Center(child: Text('Error: ${state.message}'));
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        state.message,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      SizedBox(height: 24),
+                      ElevatedButton(
+                        onPressed: () {
+                          context.read<CountryDetailsBloc>().add(
+                              FetchCountryDetails(countryName: countryName));
+                        },
+                        child: Text('Retry'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             }
             return Center(
               child: Text(

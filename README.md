@@ -62,8 +62,7 @@ flutter run
    │        │  └─ country_list_screen.dart
    │        └─ widgets
    │           └─ country_card.dart
-   ├─ main.dart
-   └─ test_api.dart
+   └─ main.dart
 
 ```
 <!-- END PROJECT STRUCTURE -->
